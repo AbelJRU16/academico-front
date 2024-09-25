@@ -37,5 +37,9 @@ export async function confirmar(titulo, mensaje, method){
 }
 
 export async function enviarSolicitud(metodo, url, param = {}){
-    return await axios({method:metodo, url:url, param: param});
+    return await axios({
+        method: metodo, 
+        url: url, 
+        data: param
+    });
 }

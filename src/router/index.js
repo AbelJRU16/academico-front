@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import EstudianteView from '../views/EstudianteView.vue'
-import EstudianteNew from '../views/EstudianteNew.vue'
-import EstudianteEdit from '../views/EstudianteEdit.vue'
+import EstudianteForm from '../views/EstudianteForm.vue'
+import EstudianteList from '../views/EstudianteList.vue'
+import CursoList from '@/views/CursoList.vue'
 
 const routes = [
   {
@@ -11,19 +11,29 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/estudiantes/view/:id',
-    name: 'estudiante-view',
-    component: EstudianteView
+    path: '/cursos-list',
+    name: 'listado-cursos',
+    component: CursoList
   },
   {
-    path: '/estudiantes/new/:id',
-    name: 'estudiante-new',
-    component: EstudianteNew
+    path: '/estudiantes-list',
+    name: 'listado-estudiantes',
+    component: EstudianteList
   },
   {
-    path: '/estudiantes/edit/:id',
-    name: 'estudiante-edit',
-    component: EstudianteEdit
+    path: '/estudiante/view/:id',
+    name: 'Estudiante',
+    component: EstudianteForm
+  },
+  {
+    path: '/estudiante/new',
+    name: 'Agregar Estudiante',
+    component: EstudianteForm
+  },
+  {
+    path: '/estudiante/edit/:id',
+    name: 'Editar Estudiante',
+    component: EstudianteForm
   },
   {
     path: '/about',
