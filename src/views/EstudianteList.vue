@@ -22,7 +22,7 @@
                                 <tr v-if="this.cargando">
                                     <td colspan="7"><h3>Cargando...</h3></td>
                                 </tr>
-                                <tr v-else v-for="est, i in this.estudiantes" :key="est.id">
+                                <tr v-else v-for="est in estudiantesPaginados" :key="est.id">
                                     <td v-text="est.id"></td>
                                     <td>
                                         <img v-if="est.foto" class="foto-listado img-thumbnail" :src="est.foto" alt="">
@@ -33,14 +33,17 @@
                                     <td v-text="new Date(est.created_at).toLocaleDateString('en-US')"></td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-2">
-                                            <router-link :to="{path:'estudiante/view/'+est.id}" class="btn btn-info">
-                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                            <router-link :to="{path:'estudiante/view/'+est.id}" class="btn btn-primary">
+                                                <i class="fa fa-eye" aria-hidden="true"></i>
                                             </router-link>
                                             <router-link :to="{path:'estudiante/edit/'+est.id}" class="btn btn-warning">
-                                            <i class="fa fa-pencil" aria-hidden="true"></i>                    
+                                                <i class="fa fa-pencil" aria-hidden="true"></i>                    
                                             </router-link>
+                                            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                <i class="fa fa-gears" aria-hidden="true"></i>
+                                            </button>
                                             <button class="btn btn-danger" v-on:click="eliminarEstudiante(est.id, est.nombre+' '+est.apellido)">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -48,24 +51,79 @@
                             </tbody>
                         </table>
                     </div>
+                    <pagination
+                        :estudiantes="estudiantes"
+                        @paginaCambiada="actualizarEstudiantesPaginados"
+                    />
                 </div>
             </div>      
+        </div>
+    </div>
+    <!-- Modal -->
+     <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Administrar cursos de estudiante</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Nombre del curso</th>
+                                <th scope="col">Horas</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="cur in this.cursos" :key="cur.id">
+                                <td>{{cur.id}}</td>
+                                <td>{{cur.nombre}}</td>
+                                <td>{{cur.horas}}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button 
+                        type="button" 
+                        class="btn btn-success"
+                        data-bs-dismiss="modal"
+                    >
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 <script>
     import axios from 'axios';
     import {mostrarAlerta, confirmar, enviarSolicitud} from '../functions.js'
+    import Pagination from '@/components/Pagination.vue';
   
     export default{
+        components: {
+            Pagination
+        },
         data(){
             return{
+                cursos: [],
                 estudiantes: [],
+                estudiantesPaginados: [], // Lista paginada
                 cargando: false
             }
         },
         mounted() {
             this.getEstudiantes();
+            this.getCursos();
         },
         methods: {
             async getEstudiantes(){
@@ -73,6 +131,18 @@
                 try{
                     let resp = await axios.get('http://academico.test/api/v1/estudiantes');
                     this.estudiantes = resp.data;
+                    this.actualizarEstudiantesPaginados(this.estudiantes.slice(0, 5));
+                }catch(error){
+                    console.error(error);
+                }finally{
+                    this.cargando = false;
+                }
+            },
+            async getCursos(){
+                this.cargando = true;
+                try{
+                    let resp = await axios.get('http://academico.test/api/v1/cursos');
+                    this.cursos = resp.data;
                 }catch(error){
                     console.error(error);
                 }finally{
@@ -97,15 +167,37 @@
                         this.cargando = false;
                     }
                 }
-            }
+            },
+            actualizarEstudiantesPaginados(paginados) {
+                this.estudiantesPaginados = paginados;
+            },
         },
     }
-  </script>
-  <style>
-  .foto-listado{
-    width: 150px !important;
-    height: 150px !important;
-    max-height: fit-content;
-  }
-  </style>
+</script>
+<style>
+    select[multiple] {
+        width: 100%;
+        height: 200px;
+        padding: 10px;
+        border: 2px solid #007bff;
+        border-radius: 5px;
+        background-color: #f8f9fa;
+        color: #333;
+        font-size: 16px;
+    }
+
+    select[multiple] option {
+        padding: 8px;
+    }
+
+    select[multiple]:focus {
+        border-color: #28a745;
+        outline: none;
+    }
+    .foto-listado{
+        width: 150px !important;
+        height: 150px !important;
+        max-height: fit-content;
+    }
+</style>
   

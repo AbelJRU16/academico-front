@@ -13,25 +13,19 @@
             </a>
             <ul class="dropdown-menu">
               <li>
-                <router-link class="dropdown-item" to="/estudiantes-list">Ver</router-link>
+                <router-link class="dropdown-item" to="/estudiantes-list">
+                  <i class="fa fa-eye" aria-hidden="true"></i> Ver
+                </router-link>
               </li>
               <li>
-                <router-link class="dropdown-item" to="/estudiante/new">Nuevo</router-link>
+                <router-link class="dropdown-item" to="/estudiante/new">
+                  <i class="fa fa-file-circle-plus" aria-hidden="true"></i> Nuevo
+                </router-link>
               </li>
             </ul>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Cursos
-            </a>
-            <ul class="dropdown-menu">
-              <li>
-                <router-link class="dropdown-item" to="/cursos-list">Ver</router-link>
-              </li>
-              <li>
-                <router-link class="dropdown-item" to="/curso/new">Nuevo</router-link>
-              </li>
-            </ul>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/cursos-list">Cursos</router-link>
           </li>
         </ul>
         <form class="d-flex" role="search">

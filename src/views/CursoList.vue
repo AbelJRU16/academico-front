@@ -8,7 +8,7 @@
                         class="btn btn-light text-success" 
                         data-bs-toggle="modal" 
                         data-bs-target="#exampleModal" 
-                        v-on:click="openModalForm('new')"
+                        v-on:click="openModalForm('new', {}, 'Nuevo Curso')"
                     >
                         <i class="fa-solid fa-plus" aria-hidden="true"></i>
                     </button>
@@ -29,7 +29,7 @@
                                 <tr v-if="this.cargando">
                                     <td colspan="7"><h3>Cargando...</h3></td>
                                 </tr>
-                                <tr v-else v-for="cur, i in this.cursos" :key="cur.id">
+                                <tr v-else v-for="cur in this.cursos" :key="cur.id">
                                     <td v-text="cur.id"></td>
                                     <td v-text="cur.nombre"></td>
                                     <td v-text="cur.horas"></td>
@@ -40,7 +40,7 @@
                                                 class="btn btn-warning"
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#exampleModal" 
-                                                v-on:click="openModalForm('edit', cur)"
+                                                v-on:click="openModalForm('edit', cur, 'Editar Curso')"
                                             >
                                                 <i class="fa fa-pencil" aria-hidden="true"></i>                    
                                             </button>
@@ -62,7 +62,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">{{title}}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -115,6 +115,7 @@
             return{
                 cursos: [],
                 option: '',
+                title: '',
                 id: null,
                 form: {
                     name: '',
@@ -188,7 +189,7 @@
                     }
                 }
             },
-            openModalForm(option, data = {}){
+            openModalForm(option, data = {}, title){
                 this.option = option;
                 this.form = data;
                 this.id = data.id;
